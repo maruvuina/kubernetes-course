@@ -20,4 +20,7 @@ public class PostDto {
     private String text;
 
     private Instant postedAt;
+
+    @NotNull
+    private String topic;
 }

@@ -15,4 +15,7 @@ public class PostUpdate {
 
     @NotNull
     private String text;
+
+    @NotNull
+    private String topic;
 }

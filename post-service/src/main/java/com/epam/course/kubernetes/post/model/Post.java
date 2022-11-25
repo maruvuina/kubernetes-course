@@ -19,4 +19,6 @@ public class Post {
 
     private Instant postedAt;
 
+    private String topic;
+
 }

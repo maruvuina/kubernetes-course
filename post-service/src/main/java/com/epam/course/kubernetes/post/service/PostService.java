@@ -37,7 +37,7 @@ public class PostService {
     private final PostValidator postValidator;
 
     public Mono<PostDto> save(PostDto postDto) {
-        postValidator.validateText(postDto.getText());
+        postValidator.validate(postDto);
         Post post = postMapper.fromDto(postDto);
         post.setPostedAt(Instant.now());
         Long authorId = post.getAuthorId();
@@ -58,9 +58,10 @@ public class PostService {
     }
 
     public Mono<PostDto> update(Long id, PostUpdate postUpdate) {
-        postValidator.validateText(postUpdate.getText());
+        postValidator.validate(postUpdate);
         Mono<Post> postMono = getPostById(id);
         return postMono.flatMap(post -> {
+            post.setTopic(postUpdate.getTopic());
             post.setText(postUpdate.getText());
             post.setPostedAt(Instant.now());
             return postRepository.save(post);
