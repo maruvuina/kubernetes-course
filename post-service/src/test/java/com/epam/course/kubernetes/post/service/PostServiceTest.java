@@ -31,6 +31,7 @@ class PostServiceTest {
         postDto = PostDto.builder()
                 .id(1111L)
                 .authorId(111L)
+                .topic("Anime")
                 .text("Hi, today I post top of my favorite anime!")
                 .postedAt(Instant.parse("2022-11-11T11:11:22.022915900Z"))
                 .build();
@@ -52,6 +53,7 @@ class PostServiceTest {
                     assertNotNull(expected);
                     assertThat(expected.getId(), is(postDto.getId()));
                     assertThat(expected.getAuthorId(), is(postDto.getAuthorId()));
+                    assertThat(expected.getTopic(), is(postDto.getTopic()));
                     assertThat(expected.getText(), is(postDto.getText()));
                     assertThat(expected.getPostedAt(), is(postDto.getPostedAt()));
                 })
@@ -64,7 +66,6 @@ class PostServiceTest {
         // given
         Long id = 1L;
         when(postService.getById(id)).thenReturn(Mono.just(postDto));
-        //when(webClient.patch()).thenReturn();
 
         // when
         Mono<PostDto> actual = postService.getById(id);
@@ -77,6 +78,7 @@ class PostServiceTest {
                     assertNotNull(expected);
                     assertThat(expected.getId(), is(postDto.getId()));
                     assertThat(expected.getAuthorId(), is(postDto.getAuthorId()));
+                    assertThat(expected.getTopic(), is(postDto.getTopic()));
                     assertThat(expected.getText(), is(postDto.getText()));
                     assertThat(expected.getPostedAt(), is(postDto.getPostedAt()));
                 })
@@ -104,10 +106,13 @@ class PostServiceTest {
     void update() {
         // given
         Long id = 1L;
+        String topic = "Manga";
         String text = "Hi, today I post top of my favorite manga!";
         PostUpdate userUpdate = PostUpdate.builder()
+                .topic(topic)
                 .text(text)
                 .build();
+        postDto.setTopic(topic);
         postDto.setText(text);
         when(postService.update(id, userUpdate)).thenReturn(Mono.just(postDto));
 
@@ -120,6 +125,7 @@ class PostServiceTest {
                 .expectSubscription()
                 .assertNext(expected -> {
                     assertNotNull(expected);
+                    assertThat(expected.getTopic(), is(topic));
                     assertThat(expected.getText(), is(text));
                 })
                 .expectComplete()

@@ -47,6 +47,7 @@ class PostControllerTest {
         postDto = PostDto.builder()
                 .id(1111L)
                 .authorId(111L)
+                .topic("Anime")
                 .text("Hi, today I post top of my favorite anime!")
                 .postedAt(Instant.parse("2022-11-11T11:11:22.022915900Z"))
                 .build();
@@ -59,6 +60,7 @@ class PostControllerTest {
 
         PostDto request = PostDto.builder()
                 .authorId(1111L)
+                .topic("Anime")
                 .text("Hi, today I post top of my favorite anime!")
                 .build();
 
@@ -116,8 +118,10 @@ class PostControllerTest {
     void update() {
         // given
         Long id = 1L;
+        String topic = "Manga";
         String text = "Hi, today I post top of my favorite manga!";
         PostUpdate userUpdate = PostUpdate.builder()
+                .topic(topic)
                 .text(text)
                 .build();
         when(postService.update(id, userUpdate)).thenReturn(Mono.just(postDto));
