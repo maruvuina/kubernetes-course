@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-import com.epam.course.kubernetes.user.configuration.DbSchemaInitOnStartup;
 import com.epam.course.kubernetes.user.dto.UserDto;
 import com.epam.course.kubernetes.user.dto.UserUpdate;
 import com.epam.course.kubernetes.user.model.PostAmountStatus;
@@ -38,9 +37,6 @@ class UserControllerTest {
     private UserService userService;
 
     private UserDto userDto;
-
-    @MockBean
-    private DbSchemaInitOnStartup dbSchemaInitOnStartup;
 
     @BeforeEach
     void setUp() {

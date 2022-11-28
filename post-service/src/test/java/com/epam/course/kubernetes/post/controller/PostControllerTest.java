@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Objects;
 
-import com.epam.course.kubernetes.post.configuration.DbSchemaInitOnStartup;
 import com.epam.course.kubernetes.post.dto.PostDto;
 import com.epam.course.kubernetes.post.dto.PostUpdate;
 import com.epam.course.kubernetes.post.service.PostService;
@@ -38,9 +37,6 @@ class PostControllerTest {
     private PostService postService;
 
     private PostDto postDto;
-
-    @MockBean
-    private DbSchemaInitOnStartup dbSchemaInitOnStartup;
 
     @BeforeEach
     void setUp() {
