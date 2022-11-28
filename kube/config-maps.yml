@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: post-configuration-app
+  namespace: k8s-program
+data:
+  application_properties_file_name: "application.properties"
+  application.properties: |
+    REMOTE_SERVICE_BASE_URL=http://user-service:8081
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresql-initdb-users-config
+  namespace: k8s-program
+data:
+  initdb.sql: |
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY, 
+      username VARCHAR(255) NOT NULL, 
+      amount_of_posts INTEGER NOT NULL);
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgresql-initdb-posts-config
+  namespace: k8s-program
+data:
+  initdb.sql: |
+    CREATE TABLE IF NOT EXISTS posts (
+      id SERIAL PRIMARY KEY,
+      author_id SERIAL NOT NULL,
+      text VARCHAR(2000) NOT NULL,
+      topic VARCHAR(100) NOT NULL,
+      posted_at TIMESTAMP NOT NULL);

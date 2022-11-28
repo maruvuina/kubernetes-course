@@ -31,6 +31,11 @@ spec:
     matchLabels:
       app: user-service-pod
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
@@ -39,16 +44,38 @@ spec:
     spec:
       containers:
         - name: users-app
-          image: epaminaprymava/users-app:1.0.0
+          image: epaminaprymava/users-app:2.0.0
           ports:
             - containerPort: 8081
           env:
-            - name: DB_URL
-              value: r2dbc:postgresql://user-db:5432/users
             - name: DB_USERNAME
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: users-database-secret
+                  key: username
             - name: DB_PASSWORD
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: users-database-secret
+                  key: password
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: users-database-secret
+                  key: url
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
 
 ---
 
@@ -78,6 +105,11 @@ spec:
     matchLabels:
       app: post-service-pod
   replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       labels:
@@ -86,15 +118,40 @@ spec:
     spec:
       containers:
         - name: posts-app
-          image: epaminaprymava/posts-app:1.0.0
+          image: epaminaprymava/posts-app:2.0.0
           ports:
             - containerPort: 8082
           env:
-            - name: DB_URL
-              value: r2dbc:postgresql://post-db:5432/posts
-            - name: DB_USERNAME
-              value: postgres
-            - name: DB_PASSWORD
-              value: admin
             - name: REMOTE_SERVICE_BASE_URL
-              value: http://user-service:8081
+              valueFrom:
+                configMapKeyRef:
+                  name: post-configuration-app
+                  key: application_properties_file_name
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: posts-database-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: posts-database-secret
+                  key: password
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: posts-database-secret
+                  key: url
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8082
+            initialDelaySeconds: 20 
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8082
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5

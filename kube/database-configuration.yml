@@ -35,6 +35,11 @@ spec:
   selector:
     matchLabels:
       app: user-db
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1    
   template:
     metadata:
       labels:
@@ -47,18 +52,43 @@ spec:
             - containerPort: 5432
           env:
             - name: POSTGRES_USER
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: users-database-secret
+                  key: username
             - name: POSTGRES_PASSWORD
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: users-database-secret
+                  key: password
             - name: POSTGRES_DB
-              value: users    
+              valueFrom:
+                secretKeyRef:
+                  name: users-database-secret
+                  key: dbname
           volumeMounts:
             - name: storage
               mountPath: /data/db/users
+            - name: config-initdb
+              mountPath: /docker-entrypoint-initdb.d
+          readinessProbe:
+            exec:
+              command: ["psql", "--password", "admin", "-U", "postgres", "-d", "users", "-c", "SELECT 1"]
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          livenessProbe:
+            exec:
+              command: ["psql", "--password", "admin", "-U", "postgres", "-d", "users", "-c", "SELECT 1"]
+            initialDelaySeconds: 45
+            periodSeconds: 10
+            timeoutSeconds: 2    
       volumes:
         - name: storage
           persistentVolumeClaim:
             claimName: postgres-pvc
+        - name: config-initdb
+          configMap:
+            name: postgresql-initdb-users-config
 
 ---
 
@@ -85,6 +115,11 @@ spec:
   selector:
     matchLabels:
       app: post-db
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1    
   template:
     metadata:
       labels:
@@ -95,17 +130,41 @@ spec:
           image: postgres:14-alpine
           ports:
             - containerPort: 5432
-          env:
+          env:  
             - name: POSTGRES_USER
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: posts-database-secret
+                  key: username
             - name: POSTGRES_PASSWORD
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: posts-database-secret
+                  key: password
             - name: POSTGRES_DB
-              value: posts  
+              valueFrom:
+                secretKeyRef:
+                  name: posts-database-secret
+                  key: dbname
           volumeMounts:
             - name: storage
               mountPath: /data/db/posts
+            - name: config-initdb
+              mountPath: /docker-entrypoint-initdb.d  
+          readinessProbe:
+            exec:
+              command: ["psql", "--password", "admin", "-U", "postgres", "-d", "posts", "-c", "SELECT 1"]
+            initialDelaySeconds: 15
+            timeoutSeconds: 2
+          livenessProbe:
+            exec:
+              command: ["psql", "--password", "admin", "-U", "postgres", "-d", "posts", "-c", "SELECT 1"]
+            initialDelaySeconds: 45
+            timeoutSeconds: 2
       volumes:
         - name: storage
           persistentVolumeClaim:
             claimName: postgres-pvc
+        - name: config-initdb
+          configMap:
+            name: postgresql-initdb-posts-config
