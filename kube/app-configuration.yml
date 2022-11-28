@@ -126,7 +126,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: post-configuration-app
-                  key: application_properties_file_name
+                  key: remote_service_base_url
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:

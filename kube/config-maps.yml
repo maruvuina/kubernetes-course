@@ -4,9 +4,7 @@ metadata:
   name: post-configuration-app
   namespace: k8s-program
 data:
-  application_properties_file_name: "application.properties"
-  application.properties: |
-    REMOTE_SERVICE_BASE_URL=http://user-service:8081
+  remote_service_base_url: http://user-service:8081
 
 ---
 
