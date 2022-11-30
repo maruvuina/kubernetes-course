@@ -81,7 +81,9 @@ spec:
               command: ["psql", "--password", "admin", "-U", "postgres", "-d", "users", "-c", "SELECT 1"]
             initialDelaySeconds: 45
             periodSeconds: 10
-            timeoutSeconds: 2    
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 1
       volumes:
         - name: storage
           persistentVolumeClaim:
@@ -161,6 +163,8 @@ spec:
               command: ["psql", "--password", "admin", "-U", "postgres", "-d", "posts", "-c", "SELECT 1"]
             initialDelaySeconds: 45
             timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 1
       volumes:
         - name: storage
           persistentVolumeClaim:

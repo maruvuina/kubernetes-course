@@ -65,17 +65,19 @@ spec:
                   key: url
           readinessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/readiness
               port: 8081
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
             timeoutSeconds: 5
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/liveness
               port: 8081
-            initialDelaySeconds: 10
+            initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
 
 ---
 
@@ -144,14 +146,16 @@ spec:
                   key: url
           readinessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/readiness
               port: 8082
             initialDelaySeconds: 20 
             timeoutSeconds: 5
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/liveness
               port: 8082
             initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
