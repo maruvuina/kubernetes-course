@@ -73,7 +73,7 @@ spec:
       volumes:
         - name: storage
           persistentVolumeClaim:
-            claimName: users-db-postgres-pvc
+            claimName: db-postgres-pvc
         - name: config-initdb
           configMap:
             name: postgresql-initdb-users-config
@@ -154,7 +154,7 @@ spec:
       volumes:
         - name: storage
           persistentVolumeClaim:
-            claimName: posts-db-postgres-pvc
+            claimName: db-postgres-pvc
         - name: config-initdb
           configMap:
             name: postgresql-initdb-posts-config
