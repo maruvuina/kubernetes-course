@@ -1,18 +1,4 @@
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: postgres-pvc
-  namespace: k8s-program
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 256Mi
-
----
-
-apiVersion: v1
 kind: Service
 metadata:
   namespace: k8s-program
@@ -87,7 +73,7 @@ spec:
       volumes:
         - name: storage
           persistentVolumeClaim:
-            claimName: postgres-pvc
+            claimName: users-db-postgres-pvc
         - name: config-initdb
           configMap:
             name: postgresql-initdb-users-config
@@ -168,7 +154,7 @@ spec:
       volumes:
         - name: storage
           persistentVolumeClaim:
-            claimName: postgres-pvc
+            claimName: posts-db-postgres-pvc
         - name: config-initdb
           configMap:
             name: postgresql-initdb-posts-config
