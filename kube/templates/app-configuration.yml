@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: k8s-program
+  name: {{ .Values.namespace }}
 
 ---
 
@@ -9,7 +9,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: user-service
-  namespace: k8s-program
+  namespace: {{ .Values.namespace }}
 spec:
   type: LoadBalancer
   selector:
@@ -25,7 +25,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user-service
-  namespace: k8s-program
+  namespace: {{ .Values.namespace }}
 spec:
   selector:
     matchLabels:
@@ -85,7 +85,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: post-service
-  namespace: k8s-program
+  namespace: {{ .Values.namespace }}
 spec:
   type: LoadBalancer
   selector:
@@ -101,7 +101,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: post-service
-  namespace: k8s-program
+  namespace: {{ .Values.namespace }}
 spec:
   selector:
     matchLabels:

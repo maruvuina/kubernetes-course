@@ -2,7 +2,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: post-configuration-app
-  namespace: k8s-program
+  namespace: {{ .Values.namespace }}
+  {{- template "config-map-chart.labels" .}}
 data:
   remote_service_base_url: http://user-service:8081
 
@@ -12,7 +13,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgresql-initdb-users-config
-  namespace: k8s-program
+  namespace: {{ .Values.namespace }}
+  {{- template "config-map-chart.labels" .}}
 data:
   initdb.sql: |
     CREATE TABLE IF NOT EXISTS users (
@@ -26,7 +28,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: postgresql-initdb-posts-config
-  namespace: k8s-program
+  namespace: {{ .Values.namespace }}
+  {{- template "config-map-chart.labels" .}}
 data:
   initdb.sql: |
     CREATE TABLE IF NOT EXISTS posts (
