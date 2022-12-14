@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-service-ingress
+  namespace: {{ .Values.namespace }}
+  labels:
+    name: app-service-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: k8s.homework.user-service
+    http:
+      paths:
+      - path: /epamapp/ina_prymava(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service
+            port: 
+              number: 8081
+  - host: k8s.homework.post-service
+    http:
+      paths:
+      - path: /epamapp/ina_prymava(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: post-service
+            port: 
+              number: 8082
